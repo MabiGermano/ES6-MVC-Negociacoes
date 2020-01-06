@@ -3,11 +3,14 @@ class NegociacaoController {
 
     constructor() {
         let docSelect = document.querySelector.bind(document);
+        
         this._inputData = docSelect("#data");
         this._inputQuantidade = docSelect("#quantidade");
         this._inputValor = docSelect("#valor");
-        this._listaNegociacoes = new ListaNegociacoes();
+
+        this._listaNegociacoes = new ListaNegociacoes(model => this._tableaNegociacoes.update(model));
         this._tableaNegociacoes = new TabelaNegociacoesView(docSelect('#tabelaNegociacoes'));
+        
         this._mensagem = new Mensagem();
         this._componenteMensagem = new MensagemView(docSelect('#mensagemSucesso'));
 
@@ -19,12 +22,18 @@ class NegociacaoController {
         event.preventDefault();
         
         this._listaNegociacoes.adiciona(this._criaNegociacao());
-        this._tableaNegociacoes.update(this._listaNegociacoes);
 
-        this._mensagem.mensagem = 'Negociação incluída com sucesso.'
+        this._mensagem.mensagem = 'Negociação incluída com sucesso.';
         this._componenteMensagem.update(this._mensagem);
         
         this._limpaFormulario();
+    }
+
+    apaga(){
+        this._listaNegociacoes.esvazia();
+
+        this._mensagem.mensagem = 'Lista de negociações excluída com sucesso';
+        this._componenteMensagem.update(this._mensagem);
     }
 
     _criaNegociacao(){
